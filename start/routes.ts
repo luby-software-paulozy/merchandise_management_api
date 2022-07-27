@@ -38,4 +38,15 @@ Route.get('db', async ({ response }: HttpContextContract) => {
 
 Route.group(() => {
   Route.resource('users', 'UsersController').apiOnly()
+  Route.post('login', 'AuthController.login')
 }).prefix('v1/api')
+
+/* Authenticated Routes */
+
+Route.group(() => {
+  Route.get('test', ({ response }) => {
+    return response.ok('auhtenticade')
+  })
+})
+  .prefix('v1/api')
+  .middleware('auth')
