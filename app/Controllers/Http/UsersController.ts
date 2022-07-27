@@ -2,11 +2,12 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class UsersController {
   public async index({ response }: HttpContextContract) {
-    response.ok('List all users')
+    response.status(200).json({ message: 'success' })
   }
 
-  public async store({ response }: HttpContextContract) {
-    response.ok('Store a new user')
+  public async store({ response, request }: HttpContextContract) {
+    const body = request.only(['name', 'email'])
+    response.ok(body)
   }
 
   public async show({ response }: HttpContextContract) {

@@ -18,8 +18,23 @@
 |
 */
 import Route from '@ioc:Adonis/Core/Route'
+import Database from '@ioc:Adonis/Lucid/Database'
+
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 Route.where('id', Route.matchers.number())
+
+Route.get('db', async ({ response }: HttpContextContract) => {
+  await Database.report().then(({ health }) => {
+    const { healthy, message } = health
+
+    if (healthy) {
+      return response.ok({ message })
+    }
+
+    return response.internalServerError({ message })
+  })
+})
 
 Route.group(() => {
   Route.resource('users', 'UsersController').apiOnly()
