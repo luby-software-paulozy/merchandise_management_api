@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
-import { v4 as uuid } from 'uuid'
 import Address from './Address'
 import Purchase from './Purchase'
 import Role from './Role'
@@ -10,7 +9,7 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
-  public secureId: typeof uuid
+  public secureId: string
 
   @column()
   public name: string
@@ -39,7 +38,7 @@ export default class User extends BaseModel {
   public purchases: HasMany<typeof Purchase>
 
   @manyToMany(() => Role, {
-    pivotTable: 'users_roles',
+    pivotTable: 'user_roles',
   })
   public roles: ManyToMany<typeof Role>
 }
