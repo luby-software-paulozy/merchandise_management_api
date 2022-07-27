@@ -17,9 +17,10 @@
 | import './routes/customer'
 |
 */
-
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.where('id', Route.matchers.number())
+
+Route.group(() => {
+  Route.resource('users', 'UsersController').apiOnly()
+}).prefix('v1/api')
