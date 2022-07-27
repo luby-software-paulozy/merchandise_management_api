@@ -41,6 +41,7 @@
     "@adonisjs/assembler": "^5.8.1",
     "@japa/preset-adonis": "^1.1.0",
     "@japa/runner": "^2.0.9",
+    "@types/uuid": "^8.3.4",
     "adonis-preset-ts": "^2.1.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
@@ -60,6 +61,7 @@
     "pg": "^8.7.3",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "uuid": "^8.3.2"
   }
 }
