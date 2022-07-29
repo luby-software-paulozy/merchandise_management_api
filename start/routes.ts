@@ -22,8 +22,6 @@ import Database from '@ioc:Adonis/Lucid/Database'
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-Route.where('id', Route.matchers.number())
-
 Route.get('db', async ({ response }: HttpContextContract) => {
   await Database.report().then(({ health }) => {
     const { healthy, message } = health
@@ -36,17 +34,17 @@ Route.get('db', async ({ response }: HttpContextContract) => {
   })
 })
 
+/* Public Routes */
+
 Route.group(() => {
-  Route.resource('users', 'UsersController').apiOnly()
   Route.post('login', 'AuthController.login')
+  Route.post('users', 'UsersController.store')
 }).prefix('v1/api')
 
 /* Authenticated Routes */
 
 Route.group(() => {
-  Route.get('test', ({ response }) => {
-    return response.ok('auhtenticade')
-  })
+  Route.resource('users', 'UsersController').apiOnly().except(['store'])
 })
   .prefix('v1/api')
   .middleware(['auth', 'is:admin,client'])
