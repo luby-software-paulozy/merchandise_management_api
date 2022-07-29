@@ -8,12 +8,13 @@ import UpdateValidator from 'App/Validators/User/UpdateValidator'
 
 export default class UsersController {
   public async index({ response, request }: HttpContextContract) {
-    const { perPage, currentPage, noPaginate } = request.qs()
+    const { perPage, currentPage, noPaginate, ...inputs } = request.qs()
 
     if (noPaginate) {
       return User.query()
         .preload('roles', (table) => table.select('id', 'name'))
         .preload('addresses')
+        .filter(inputs)
         .paginate(currentPage || 1, perPage || 10)
     }
 
@@ -21,6 +22,7 @@ export default class UsersController {
       const users = await User.query()
         .preload('roles', (table) => table.select('id', 'name'))
         .preload('addresses')
+        .filter(inputs)
         .paginate(currentPage || 1, perPage || 10)
 
       return response.status(200).json(users)
