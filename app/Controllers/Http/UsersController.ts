@@ -7,8 +7,26 @@ import StoreValidator from 'App/Validators/User/StoreValidator'
 import UpdateValidator from 'App/Validators/User/UpdateValidator'
 
 export default class UsersController {
-  public async index({ response }: HttpContextContract) {
-    response.status(200).json({ message: 'success' })
+  public async index({ response, request }: HttpContextContract) {
+    const { perPage, currentPage, noPaginate } = request.qs()
+
+    if (noPaginate) {
+      return User.query()
+        .preload('roles', (table) => table.select('id', 'name'))
+        .preload('addresses')
+        .paginate(currentPage || 1, perPage || 10)
+    }
+
+    try {
+      const users = await User.query()
+        .preload('roles', (table) => table.select('id', 'name'))
+        .preload('addresses')
+        .paginate(currentPage || 1, perPage || 10)
+
+      return response.status(200).json(users)
+    } catch (error) {
+      return response.badRequest({ message: 'error on list users', originalError: error })
+    }
   }
 
   public async store({ response, request }: HttpContextContract) {
@@ -63,8 +81,17 @@ export default class UsersController {
     }
   }
 
-  public async show({ response }: HttpContextContract) {
-    response.ok('Show a user')
+  public async show({ response, params }: HttpContextContract) {
+    try {
+      const user = await User.query()
+        .where('secure_id', params.id)
+        .preload('roles')
+        .preload('addresses')
+
+      return response.status(200).json(user)
+    } catch (error) {
+      return response.notFound({ message: 'user not found', originalError: error })
+    }
   }
 
   public async update({ response, request, params }: HttpContextContract) {
@@ -126,7 +153,14 @@ export default class UsersController {
     }
   }
 
-  public async destroy({ response }: HttpContextContract) {
-    response.ok('Delete a user')
+  public async destroy({ response, params }: HttpContextContract) {
+    try {
+      const user = await User.findByOrFail('secure_id', params.id)
+      await user.delete()
+    } catch (error) {
+      return response.notFound({ message: 'user not found', originalError: error })
+    }
+
+    return response.status(204).json({ message: 'user deleted' })
   }
 }

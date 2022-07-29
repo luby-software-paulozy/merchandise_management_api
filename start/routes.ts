@@ -44,7 +44,14 @@ Route.group(() => {
 /* Authenticated Routes */
 
 Route.group(() => {
-  Route.resource('users', 'UsersController').apiOnly().except(['store'])
+  Route.resource('users', 'UsersController').apiOnly().except(['store', 'index', 'destroy'])
 })
   .prefix('v1/api')
-  .middleware(['auth', 'is:admin,client'])
+  .middleware(['auth', 'is:client'])
+
+/* Admin Routes */
+Route.group(() => {
+  Route.resource('users', 'UsersController').only(['index', 'destroy'])
+})
+  .prefix('v1/api')
+  .middleware(['auth', 'is:admin'])

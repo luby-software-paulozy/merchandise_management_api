@@ -12,11 +12,7 @@ export default class UpdateValidator extends MessagesCustom {
   })
 
   public schema = schema.create({
-    name: schema.string.optional({}, [
-      rules.regex(/^[a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g),
-      rules.minLength(3),
-      rules.maxLength(100),
-    ]),
+    name: schema.string.optional({}, [rules.minLength(3), rules.maxLength(100)]),
     email: schema.string.optional({}, [
       rules.email(),
       rules.unique({
@@ -38,8 +34,8 @@ export default class UpdateValidator extends MessagesCustom {
     state: schema.string.optional({ trim: true }, [rules.maxLength(2)]),
     city: schema.string.optional({ trim: true }, [rules.maxLength(50)]),
     street: schema.string.optional({ trim: true }, [rules.maxLength(50)]),
-    addressId: schema.number.optional({}, [rules.exists({ table: 'addresses', column: 'id' })]),
-    number: schema.string.optional({}, [rules.unsigned()]),
+    addressId: schema.string.optional({}, [rules.exists({ table: 'addresses', column: 'id' })]),
+    number: schema.string.optional({}, [rules.maxLength(200)]),
     district: schema.string.optional({ trim: true }, [rules.maxLength(250)]),
     complement: schema.string.optional({ trim: true }, [rules.maxLength(250)]),
   })
