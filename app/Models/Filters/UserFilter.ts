@@ -6,7 +6,7 @@ import User from 'App/Models/User'
 export default class UserFilter extends BaseModelFilter {
   public $query: ModelQueryBuilderContract<typeof User, User>
 
-  // public method (value: any): void {
+  // public method(value: any): void {
   //   this.$query.where('name', value)
   // }
 
